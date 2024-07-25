@@ -47,11 +47,17 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// updating many products
 const updateProducts = async (req, res) => {
   try {
-    await PRODUCT.updateMany(req.body);
-
-    res.status(200).json({ message: "products updated successfully" });
+    const products = await PRODUCT.find(req.body["$update"]);
+    if (products.length === 0) {
+      res.status(404).json({ message: "products not found!" });
+    } else {
+      await PRODUCT.updateMany(req.body);
+      const checkProducts = await PRODUCT.find(req.body["$set"]);
+      res.status(200).json(checkProducts);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -72,9 +78,11 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// delete many products
+// DANGEROUS, IT'S WILL DELETE ALL THE DATA IN COLLECTION
 const deleteProducts = async (req, res) => {
   try {
-    const products = await PRODUCT.deleteMany(req.body);
+    await PRODUCT.deleteMany(req.body);
     const checkProducts = await PRODUCT.find(req.body);
     if (checkProducts.length === 0) {
       res.status(200).json({ message: "products deleted successfully" });
@@ -93,7 +101,7 @@ module.exports = {
   deleteProduct,
   updateProduct,
   updateProducts,
-  deleteProducts,
+  // deleteProducts, DISABLED BY DEFAULT, BE CAREFUL IF YOU WANT TO ENABLE IT!
 };
 
 PRODUCT.updateMany();
