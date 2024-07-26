@@ -59,7 +59,14 @@ Start the server by running:
 ```bash
 npm start
 ```
-
+or
+```bash
+npm run serve
+```
+or for running in developemnet:
+```bash
+npm run dev
+```
 Navigate to http://localhost:PORT to see the server running.
 
 ### API Endpoints
