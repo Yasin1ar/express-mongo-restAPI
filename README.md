@@ -88,6 +88,6 @@ If an error occurs during any operation, the server will log the error and respo
 
 The server connects to a MongoDB database using the URI provided in the .env file. Upon successful connection, the server starts and listens on the specified port. If the connection fails, an error message is logged.
 
-I would gladly take feedback and I would really appreciate any contribute to this project guys,
+#### I would gladly take feedback and I would really appreciate any contribute to this project guys,
 thank you and have fun mongos-bros!
 (mongos-bros?! such a lame Ending for such a professional introduction I know, well, what can I say, I am no Perfectionist man!)
