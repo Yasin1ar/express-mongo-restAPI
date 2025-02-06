@@ -1,102 +1,155 @@
-# Product Management API
+# CRUD API with MongoDB & Express (TypeScript)
 
-## Overview
+A simple **CRUD API** built using **Node.js, Express, TypeScript, and MongoDB**. This API allows you to create, read, update, and delete products.
 
-This project is a simple product management API built using Node.js, Express, and MongoDB. It allows users to perform CRUD (Create, Read, Update, Delete) operations on products. The API is secured using the Helmet middleware and follows best practices for error handling and database connection management.
+---
 
 ## Features
 
-- **CRUD Operations**: Create, read, update, and delete products.
-- **Security**: Enhanced security using Helmet middleware.
-- **Error Handling**: Comprehensive error handling with appropriate status codes and messages.
-- **Database Connection**: Connects to a MongoDB database and handles connection errors gracefully.
+- ✅ **Create, Read, Update, Delete (CRUD) operations**
+- ✅ **MongoDB as the database**
+- ✅ **Express.js for routing**
+- ✅ **Helmet for security**
+- ✅ **TypeScript for type safety**
+- ✅ **Dotenv for environment configuration**
+- ✅ **Docker support for MongoDB**
 
-## Project Structure
+---
 
-- **index.js**: Initializes the Express server, sets up middleware, connects to MongoDB, and starts the server.
-- **route/product.router.js**: Defines the routes for product-related operations.
-- **controller/product.controller.js**: Contains the logic for handling product-related operations.
-- **models/products.model.js**: Defines the MongoDB schema for products.
+## Installation
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js
-- ExpressJs
-- MongoDB driver for node.js
-- MongoDB Atlas connection string
-- npm (Node Package Manager)
-
-You could sign-up for MonogoDB Atlas and use the free service!
-https://www.mongodb.com/cloud/atlas/register
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/Yasin1ar/crud-app-mongodb.git
-   cd crud-app-mongodb
-   ```
-
-2. Install the dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file in the root directory and add the following environment variables:
-   ```plaintext
-   PORT=<your-port>
-   MONGO_URI=<your-mongodb-uri>
-   ```
-
-### Running the Server
-
-Start the server by running:
-
-```bash
-npm start
+### **1️⃣ Clone the Repository**
+```sh
+git clone https://github.com/your-username/crud-app-mongodb.git
+cd crud-app-mongodb
 ```
-or
-```bash
-npm run serve
+
+### **2️⃣ Install Dependencies**
+```sh
+npm install
 ```
-or for running in developemnet:
-```bash
+
+### **3️⃣ Configure Environment Variables**
+Create a **.env** file in the project root and add:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/products
+```
+
+---
+
+## Running MongoDB with Docker (optional)
+
+If you don’t have MongoDB installed, you can **run MongoDB in a Docker container** using the official **MongoDB image**:
+
+### **1️⃣ Pull MongoDB Image**
+```sh
+docker pull mongo:6
+```
+
+### **2️⃣ Run MongoDB Container**
+```sh
+docker run --name mongodb -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=pass123 --rm mongo:6
+```
+
+- `-d`: Run the container in the background  
+- `-p 27017:27017`: Expose MongoDB on port **27017**  
+- `-e MONGO_INITDB_ROOT_USERNAME=admin`: Set a username  
+- `-e MONGO_INITDB_ROOT_PASSWORD=pass123`: Set a password  
+- `--rm`: Automatically remove the container when stopped  
+
+### **3️⃣ Connect Your App to MongoDB**
+Make sure your `.env` file is updated with:
+
+```env
+MONGO_URI=mongodb://admin:pass123@localhost:27017/
+```
+
+> If using **MongoDB Compass**, connect using:  
+> `mongodb://admin:pass123@localhost:27017/`
+
+---
+
+## Running the Project
+
+### **Development Mode**
+```sh
 npm run dev
 ```
-Navigate to http://localhost:PORT to see the server running.
 
-### API Endpoints
+### **Production Mode**
+```sh
+npm run build
+npm start
+```
 
-product Routes
+---
 
-- GET /api/products: Retrieve all products.
-- GET /api/products/:id: Retrieve a specific product by ID.
-- POST /api/products: Create a new product.
-- PUT /api/products/:id: Update a specific product by ID.
-- PUT /api/products: Update multiple products.
-- DELETE /api/products/:id: Delete a specific product by ID.
-- DELETE /api/products: Delete multiple products (disabled by default for safety).
+## API Endpoints
 
-### Middleware
+| Method | Endpoint            | Description                   |
+|--------|---------------------|-------------------------------|
+| **GET**    | `/api/products`         | Get all products             |
+| **GET**    | `/api/products/:id`     | Get a single product by ID   |
+| **POST**   | `/api/products`         | Create a new product         |
+| **PUT**    | `/api/products/:id`     | Update a product by ID       |
+| **DELETE** | `/api/products/:id`     | Delete a product by ID       |
 
-- express.json(): Parses incoming requests with JSON payloads.
-- express.urlencoded(): Parses incoming requests with URL-encoded payloads.
-- helmet(): Secures the app by setting various HTTP headers.
+---
 
-### Error Handling
+## Example Requests
 
-If an error occurs during any operation, the server will log the error and respond with a 500 status code and an appropriate error message.
+### **1️⃣ Create a Product**
+```sh
+curl -X POST http://localhost:3000/api/products \
+     -H "Content-Type: application/json" \
+     -d '{
+       "name": "Gaming Mouse",
+       "price": 49.99,
+       "description": "Ergonomic gaming mouse with RGB lighting.",
+       "category": "Gaming Accessories",
+       "stock": 100
+     }'
+```
 
-### Database Connection
+### **2️⃣ Get All Products**
+```sh
+curl http://localhost:3000/api/products
+```
 
-The server connects to a MongoDB database using the URI provided in the .env file. Upon successful connection, the server starts and listens on the specified port. If the connection fails, an error message is logged.
+### **3️⃣ Get a Product by ID**
+```sh
+curl http://localhost:3000/api/products/your-product-id
+```
 
-### contribute to this 
+### **4️⃣ Update a Product**
+```sh
+curl -X PUT http://localhost:3000/api/products/your-product-id \
+     -H "Content-Type: application/json" \
+     -d '{"price": 59.99, "stock": 90}'
+```
 
-I would gladly take feedback and I would really appreciate any contribute to this project guys,
-thank you and have fun mongos-bros!
-(mongos-bros?! such a lame Ending for such a professional introduction I know, well, what can I say, I am no Perfectionist man!)
+### **5️⃣ Delete a Product**
+```sh
+curl -X DELETE http://localhost:3000/api/products/your-product-id
+```
+
+---
+
+## Technologies Used
+
+- **Node.js** - Backend runtime
+- **Express.js** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB ORM
+- **TypeScript** - Static typing
+- **Docker** - Containerized database
+- **Helmet** - Security middleware
+- **Dotenv** - Environment variable management
+
+---
+
+## License
+This project is **open-source** and available under the **MIT License**.
+
