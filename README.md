@@ -20,8 +20,8 @@ A simple **CRUD API** built using **Node.js, Express, TypeScript, and MongoDB**.
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/your-username/crud-app-mongodb.git
-cd crud-app-mongodb
+git clone https://github.com/your-username/express-mongo-restAPI.git
+cd express-mongo-restAPI
 ```
 
 ### **2️⃣ Install Dependencies**
@@ -34,7 +34,7 @@ Create a **.env** file in the project root and add:
 
 ```env
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/products
+MONGO_URI=mongodb://{ROOT_USERNAME}:{ROOT_PASSWORD}@localhost:27017/
 ```
 
 ---
