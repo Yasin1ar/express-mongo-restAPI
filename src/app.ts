@@ -1,35 +1,72 @@
-import express, { Request, Response } from "express";
+/**
+ * Express Application Entry Point
+ * 
+ * This is the main application file that configures and initializes the Express server.
+ * It sets up middleware, connects to MongoDB, and defines API routes.
+ * 
+ * Configuration:
+ * - Environment variables loaded from .env file
+ * - Required variables: MONGO_URI, PORT (optional, defaults to 3000)
+ * 
+ * Features:
+ * - Express middleware for JSON parsing and URL encoding
+ * - Helmet for enhanced API security
+ * - MongoDB connection with Mongoose
+ * - Product API routes
+ * 
+ * @module app
+*/
+
+import express, { Request, Response, NextFunction, Application } from "express";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import productRouter from "./routes/product.routes";
 
-dotenv.config(); // Load environment variables
+// Load environment variables
+dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 9000;
-const mongoURI = process.env.MONGO_URI || "";
+const app: Application = express();
+const PORT = process.env.PORT || "3000";
+const mongoURI = process.env.MONGO_URI;
 
-// Middleware
+// Check if required environment variables are defined
+if (!mongoURI) {
+  console.error("MONGO_URI is not defined in environment variables");
+  process.exit(1);
+}
+
+// Configure middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet()); // Security middleware
+app.use(morgan('combined')); // Request logging
 
-// Routes
+// Register routes
 app.use("/api/products", productRouter);
 
-// Test route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello RIDICULES!");
+// Global error handling middleware
+app.use((err: Error & { status?: number }, req: Request, res: Response, next: NextFunction) => {
+  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
-// Database Connection
+// Connect to database and start server
 mongoose
   .connect(mongoURI)
   .then(() => {
     console.log("CONNECTED TO DB");
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`SERVER IS RUNNING ON PORT ${PORT}!`);
+    });
+    
+    // Graceful shutdown handling
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM signal received: closing HTTP server and DB connections');
+      server.close(() => {
+        mongoose.connection.close();
+        console.log('HTTP server and DB connections closed');
+      });
     });
   })
   .catch((error) => {
